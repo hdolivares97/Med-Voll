@@ -1,11 +1,11 @@
-package med.voli.api.medico;
+package med.voli.api.domain.medico;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import med.voli.api.direccion.Direccion;
+import med.voli.api.domain.direccion.Direccion;
 
 @Entity(name = "Medico")
 @Table(name = "medicos")
