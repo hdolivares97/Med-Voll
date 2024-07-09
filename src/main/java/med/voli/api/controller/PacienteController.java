@@ -1,5 +1,7 @@
 package med.voli.api.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import med.voli.api.domain.paciente.*;
@@ -13,12 +15,15 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 @RestController
 @RequestMapping("/pacientes")
+@SecurityRequirement(name = "bearer-key")
+@SuppressWarnings("all")
 public class PacienteController {
     @Autowired
     private PacienteRepository repository;
 
     @PostMapping
     @Transactional
+    @Operation(summary = "Registra un nuevo paciente")
     public ResponseEntity registrar(@RequestBody @Valid DatosRegistroPaciente datos, UriComponentsBuilder uriBuilder) {
         var paciente = new Paciente(datos);
         repository.save(paciente);
@@ -28,6 +33,7 @@ public class PacienteController {
     }
 
     @GetMapping
+    @Operation(summary = "Obtiene el listado para los pacientes")
     public ResponseEntity<Page<DatosListaPaciente>> listar(@PageableDefault(size = 10, sort = {"nombre"}) Pageable paginacion) {
         var page = repository.findAllByActivoTrue(paginacion).map(DatosListaPaciente::new);
         return ResponseEntity.ok(page);
@@ -35,6 +41,7 @@ public class PacienteController {
 
     @PutMapping
     @Transactional
+    @Operation(summary = "Actualiza las informaciones para el paciente")
     public ResponseEntity actualizar(@RequestBody @Valid DatosActualizacionPaciente datos) {
         var paciente = repository.getReferenceById(datos.id());
         paciente.actualizarInformacoes(datos);
@@ -44,6 +51,7 @@ public class PacienteController {
 
     @DeleteMapping("/{id}")
     @Transactional
+    @Operation(summary = "Elimina un paciente a partir del ID")
     public ResponseEntity eliminar(@PathVariable Long id) {
         var paciente = repository.getReferenceById(id);
         paciente.eliminar();
@@ -52,6 +60,7 @@ public class PacienteController {
     }
 
     @GetMapping("/{id}")
+    @Operation(summary = "obtiene los detalles para el paciente con el ID indicado")
     public ResponseEntity detallar(@PathVariable Long id) {
         var paciente = repository.getReferenceById(id);
         return ResponseEntity.ok(new DatosDetallesPaciente(paciente));

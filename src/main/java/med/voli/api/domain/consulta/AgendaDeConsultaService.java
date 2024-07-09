@@ -47,7 +47,7 @@ public class AgendaDeConsultaService {
             throw new ValidacionDeIntegridad("no existe medicos disponibles para este horario y especialidad");
         }
 
-        var consulta = new Consulta(null, paciente, medico, datosAgendarConsulta.fecha());
+        var consulta = new Consulta(medico, paciente, datosAgendarConsulta.fecha());
         consultaRepository.save(consulta);
 
         return new DatosDetalleConsulta(consulta);
